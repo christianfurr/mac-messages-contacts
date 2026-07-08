@@ -65,9 +65,9 @@ Group Chat 🥷|0130e907...|272|2026-07-08 11:24:40
 John Smith|+18015555678|21292|2026-07-08 11:22:00
 
 $ scripts/read-thread.sh "+13855551234" 3
-[2026-07-08 11:30:45] +13855551234: Why are you heheing
-[2026-07-08 11:30:56] me: Idk that picture is always funny to me
-[2026-07-08 11:31:04] +13855551234: Why
+[2026-07-08 11:30:45] +13855551234: are we still on for tonight?
+[2026-07-08 11:30:56] me: yeah, 7 works
+[2026-07-08 11:31:04] +13855551234: see you then
 ```
 
 ## Safety & privacy
