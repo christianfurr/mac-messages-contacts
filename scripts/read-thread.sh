@@ -2,7 +2,7 @@
 # Read recent messages in one conversation, extracting text from attributedBody
 # when the text column is NULL (common for sent messages).
 # Usage: read-thread.sh <chat_identifier> [limit]
-#   chat_identifier: phone (+13852965566), email, or group chat id (chat123...)
+#   chat_identifier: phone (+13855551234), email, or group chat id (chat123...)
 # Requires: Full Disk Access; run outside sandbox.
 set -euo pipefail
 

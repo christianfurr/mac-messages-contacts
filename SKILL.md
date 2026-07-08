@@ -42,11 +42,11 @@ SKILL=~/.claude/skills/mac-messages-contacts
 $SKILL/scripts/list-chats.sh 15
 
 # Read a thread by phone number (last N messages)
-$SKILL/scripts/read-thread.sh "+13852965566" 20
+$SKILL/scripts/read-thread.sh "+13855551234" 20
 
 # Search contacts by name, number fragment, or email
-$SKILL/scripts/contacts-search.sh "jocelyn"
-$SKILL/scripts/contacts-search.sh "3852965566"
+$SKILL/scripts/contacts-search.sh "jane"
+$SKILL/scripts/contacts-search.sh "3855551234"
 ```
 
 All three scripts must run with `dangerouslyDisableSandbox: true`.
@@ -78,7 +78,7 @@ FROM message m
 JOIN chat_message_join cmj ON cmj.message_id = m.ROWID
 JOIN chat c ON c.ROWID = cmj.chat_id
 LEFT JOIN handle h ON h.ROWID = m.handle_id
-WHERE c.chat_identifier = '+13852965566'
+WHERE c.chat_identifier = '+13855551234'
 ORDER BY m.date DESC LIMIT 20;
 ```
 
@@ -88,11 +88,11 @@ ORDER BY m.date DESC LIMIT 20;
 - `ZABCDPHONENUMBER` — `ZFULLNUMBER`, `ZOWNER` → `ZABCDRECORD.Z_PK`
 - `ZABCDEMAILADDRESS` — `ZADDRESS`, `ZOWNER`
 
-Phone formats vary (`+13852965566` vs `+1 (385) 296-5566`) — normalize before
+Phone formats vary (`+13855551234` vs `+1 (385) 555-1234`) — normalize before
 matching:
 
 ```sql
-REPLACE(REPLACE(REPLACE(REPLACE(ZFULLNUMBER,'(',''),')',''),'-',''),' ','') LIKE '%3852965566'
+REPLACE(REPLACE(REPLACE(REPLACE(ZFULLNUMBER,'(',''),')',''),'-',''),' ','') LIKE '%3855551234'
 ```
 
 Match on the last 10 digits, and always loop over every `Sources/*/` database.
@@ -103,7 +103,7 @@ Reading uses SQLite; **sending uses AppleScript** (separate macOS permission,
 prompted on first use):
 
 ```bash
-osascript -e 'tell application "Messages" to send "text here" to buddy "+13852965566" of (service 1 whose service type is iMessage)'
+osascript -e 'tell application "Messages" to send "text here" to buddy "+13855551234" of (service 1 whose service type is iMessage)'
 ```
 
 The dvdsgl-claude-imessage plugin's send scripts also work
