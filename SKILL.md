@@ -1,6 +1,6 @@
 ---
 name: "Mac Messages & Contacts Query"
-description: "Query macOS Messages history (chat.db) and Contacts (AddressBook) via direct SQLite reads. Use when asked to read texts, list iMessage conversations, search message history, look up a contact by name or phone number, or resolve phone numbers to names. Handles Full Disk Access, Apple epoch timestamps, and multi-source contact databases."
+description: "Query macOS Messages history (chat.db) and Contacts (AddressBook) via direct SQLite reads, and send iMessages (direct or group chats) via AppleScript. Use when asked to read texts, list iMessage conversations, search message history, look up a contact by name or phone number, resolve phone numbers to names, or send a text. Handles Full Disk Access, Apple epoch timestamps, multi-source contact databases, and group-chat send syntax."
 ---
 
 # Mac Messages & Contacts Query
@@ -106,9 +106,27 @@ prompted on first use):
 osascript -e 'tell application "Messages" to send "text here" to buddy "+13855551234" of (service 1 whose service type is iMessage)'
 ```
 
-The dvdsgl-claude-imessage plugin's send scripts also work
-(`send-message.sh`, `send-to-chat.sh` for groups). Its `list-conversations.sh`
-read script is broken (returns empty) — use this skill's scripts instead.
+### Group chats (verified 2026-07-08)
+
+`send ... to buddy` only works for direct messages. For a group chat, target it
+by chat id using the format `any;+;<chat_identifier>`, where `chat_identifier`
+comes from the `chat` table in chat.db (a hex GUID like
+`d4c1b2a3e5f6478899aabbccddeeff00` or a `chatNNN…` id):
+
+```bash
+osascript -e 'tell application "Messages" to send "text here" to chat id "any;+;CHAT_IDENTIFIER"'
+```
+
+Formats that FAIL:
+- `"iMessage;+;<identifier>"` → error -1728 "Can't get chat id" (even though
+  chat.db shows `service_name = iMessage`)
+- dvdsgl-claude-imessage plugin's `send-to-chat.sh` → errors with
+  "Can't get text (chat id …) of account id" even when given the correct id.
+  Its `list-conversations.sh` is also broken (returns empty). Don't use the
+  plugin's scripts — use direct osascript and this skill's read scripts.
+
+After sending, verify by re-reading the thread from chat.db (allow a few
+seconds for the message to land).
 **Always confirm with the user before sending anything.**
 
 ## Troubleshooting
