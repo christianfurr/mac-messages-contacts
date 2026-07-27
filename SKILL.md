@@ -125,6 +125,35 @@ Formats that FAIL:
   Its `list-conversations.sh` is also broken (returns empty). Don't use the
   plugin's scripts — use direct osascript and this skill's read scripts.
 
+### Attachments — file MUST live in `~/Pictures` (verified 2026-07-26)
+
+Sending a file via AppleScript only works if the file is inside `~/Pictures`.
+Messages.app is sandboxed and cannot read attachments from anywhere else
+(`~/`, `~/Desktop`, `~/Documents`, `/tmp` all FAIL). A send from a bad location
+does NOT error at the osascript layer — `osascript` exits 0, the row is created
+with a progress bar, then flips to "Not Delivered": chat.db shows
+`message.error = 34`, `is_sent = 0`, `attachment.transfer_state = 6`. Success
+looks like `error = 0`, `is_sent = 1`, `transfer_state = 5`.
+
+```bash
+cp /tmp/report.png ~/Pictures/report.png
+osascript <<'EOF'
+set f to POSIX file "/Users/USERNAME/Pictures/report.png"
+tell application "Messages"
+    send f to buddy "+1XXXXXXXXXX" of (1st service whose service type is iMessage)
+end tell
+EOF
+```
+
+`message.error = 34` is an IMCore delivery error (daemon rejected the upload),
+NOT the AppleScript language error 34 ("disk full") — different namespaces.
+Note failed attempts leave stuck "Not Delivered" rows sender-side; they are
+never delivered to the recipient, but clutter the sender's thread.
+
+You cannot send by writing chat.db directly — the `imagent` daemon owns
+delivery; an inserted row transmits nothing and writing the live DB risks
+corruption. AppleScript is the only supported automation path.
+
 After sending, verify by re-reading the thread from chat.db (allow a few
 seconds for the message to land).
 **Always confirm with the user before sending anything.**
