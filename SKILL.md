@@ -1,5 +1,5 @@
 ---
-name: "Mac Messages & Contacts Query"
+name: mac-messages-contacts
 description: "Query macOS Messages history (chat.db) and Contacts (AddressBook) via direct SQLite reads, and send iMessages (direct or group chats) via AppleScript. Use when asked to read texts, list iMessage conversations, search message history, look up a contact by name or phone number, resolve phone numbers to names, or send a text. Handles Full Disk Access, Apple epoch timestamps, multi-source contact databases, and group-chat send syntax."
 ---
 

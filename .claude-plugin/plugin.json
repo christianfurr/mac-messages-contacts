@@ -1,0 +1,15 @@
+{
+  "name": "mac-messages-contacts",
+  "displayName": "Mac Messages & Contacts",
+  "description": "Query macOS Messages history and Contacts directly via SQLite, and send iMessages via AppleScript. No MCP server required.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Christian Furr",
+    "url": "https://github.com/christianfurr"
+  },
+  "homepage": "https://github.com/christianfurr/mac-messages-contacts",
+  "repository": "https://github.com/christianfurr/mac-messages-contacts",
+  "license": "MIT",
+  "keywords": ["macos", "imessage", "messages", "contacts", "sqlite", "applescript"],
+  "skills": ["."]
+}
