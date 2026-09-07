@@ -32,6 +32,16 @@ gotchas that make naive queries silently fail.
    `text IS NULL` means empty message.
 7. **Open read-only** — use `sqlite3 "file:$DB?mode=ro"` so Messages/Contacts apps
    aren't disturbed. Never write to these databases.
+8. **Tapbacks are messages too — filtering them out silently deletes replies.**
+   `associated_message_type = 0` for a normal message; 2000–2005 are tapbacks
+   (2000 heart, 2001 like, 2002 dislike, 2003 haha, 2004 emphasis, 2005 question;
+   3000+ = removed). Filtering `COALESCE(associated_message_type,0)=0` to clean up a
+   thread dump is correct for *reading* it and **wrong for any analysis of who
+   reciprocates**. This produced a real false conclusion on 2026-08-05: Ady was
+   reported as never answering three "I love you"s when she had hearted all three.
+   Some people reply almost entirely in tapbacks — always count them before claiming
+   someone didn't respond. Join reactions to their target with:
+   `r.associated_message_guid LIKE '%' || t.guid` (the column is prefixed, e.g. `p:0/<guid>`).
 
 ## Quick Start
 
